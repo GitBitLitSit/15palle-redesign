@@ -1,4 +1,4 @@
-import { ArrowUpRight, Phone } from "@phosphor-icons/react/dist/ssr"
+import { Phone } from "@phosphor-icons/react/dist/ssr"
 import { Header } from "@/components/header"
 import { BottomBar } from "@/components/bottom-bar"
 import { Footer } from "@/components/footer"
@@ -105,24 +105,8 @@ export default function Home() {
           <h2 className="display text-[64px] sm:text-[90px] lg:text-[110px]">
             <RiseText lines={["Ci vediamo", "al tavolo."]} />
           </h2>
-          <div className="mt-12 grid gap-12 lg:grid-cols-[1.4fr_1fr] lg:gap-20">
+          <div className="mt-12 max-w-[640px]">
             <Schedule />
-            <div className="text-[18px]">
-              <p className="font-semibold">{club.street}</p>
-              <p className="text-cromo">{club.city}</p>
-              <a href={`tel:${club.phoneTel}`} className="mt-4 block font-semibold">
-                {club.phoneDisplay}
-              </a>
-              <a
-                href={club.mapsHref}
-                target="_blank"
-                rel="noreferrer"
-                className="mt-8 hidden h-14 items-center gap-3 bg-arancio px-7 text-[16px] font-semibold tracking-[0.08em] text-nero uppercase lg:inline-flex"
-              >
-                Apri la mappa
-                <ArrowUpRight size={20} />
-              </a>
-            </div>
           </div>
         </section>
       </main>
