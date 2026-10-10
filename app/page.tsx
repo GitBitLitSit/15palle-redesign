@@ -2,7 +2,7 @@ import { ArrowUpRight, Phone } from "@phosphor-icons/react/dist/ssr"
 import { Header } from "@/components/header"
 import { BottomBar } from "@/components/bottom-bar"
 import { Footer } from "@/components/footer"
-import { HallReveal, Hero, ParallaxPhoto, Patch, RiseText, SpeedBand, Tonight } from "@/components/scenes"
+import { HallReveal, Hero, ParallaxPhoto, Patch, RiseText, Schedule, SpeedBand } from "@/components/scenes"
 import { BarDeck } from "@/components/bar-deck"
 import { NextEvent } from "@/components/events"
 import { Gallery } from "@/components/gallery"
@@ -128,31 +128,22 @@ export default function Home() {
 
         {/* ORARI */}
         <section id="orari" className={`${wrap} scroll-mt-16 py-28 lg:py-40`}>
-          <Tonight />
-          <div className="mt-14 grid gap-10 border-t border-linea pt-10 lg:grid-cols-3">
-            <dl className="space-y-4 text-[18px]">
-              <div>
-                <dt className="text-cromo">Lunedì - sabato</dt>
-                <dd className="font-semibold">14:30 - 1:00</dd>
-              </div>
-              <div>
-                <dt className="text-cromo">Domenica</dt>
-                <dd className="font-semibold">14:30 - 24:00</dd>
-              </div>
-            </dl>
+          <h2 className="display text-[64px] sm:text-[90px] lg:text-[110px]">
+            <RiseText lines={["Ci vediamo", "al tavolo."]} />
+          </h2>
+          <div className="mt-12 grid gap-12 lg:grid-cols-[1.4fr_1fr] lg:gap-20">
+            <Schedule />
             <div className="text-[18px]">
               <p className="font-semibold">{club.street}</p>
               <p className="text-cromo">{club.city}</p>
               <a href={`tel:${club.phoneTel}`} className="mt-4 block font-semibold">
                 {club.phoneDisplay}
               </a>
-            </div>
-            <div className="hidden lg:block">
               <a
                 href={club.mapsHref}
                 target="_blank"
                 rel="noreferrer"
-                className="inline-flex h-14 items-center gap-3 bg-arancio px-7 text-[16px] font-semibold tracking-[0.08em] text-nero uppercase"
+                className="mt-8 hidden h-14 items-center gap-3 bg-arancio px-7 text-[16px] font-semibold tracking-[0.08em] text-nero uppercase lg:inline-flex"
               >
                 Apri la mappa
                 <ArrowUpRight size={20} />

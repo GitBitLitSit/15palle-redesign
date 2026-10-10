@@ -3,24 +3,21 @@
 import Image from "next/image"
 import { useEffect, useRef, useState } from "react"
 import { animate, motion, useInView, useScroll, useTransform } from "motion/react"
-import { openState } from "@/lib/club"
+import { openState, romeNow, week } from "@/lib/club"
 import { asset } from "@/lib/asset"
 
 const ease = [0.16, 1, 0.3, 1] as const
 
-/** "Aperti ora fino all'1:00" or "Chiusi, apriamo alle 14:30", computed in Bolzano time after mount. */
-export function useOpenLabel(fallback = "Tutti i giorni dalle 14:30") {
-  const [label, setLabel] = useState<{ text: string; open: boolean | null }>({ text: fallback, open: null })
+/** Open/closed in Bolzano time, computed after mount (null until then, so server and client match). */
+export function useOpenState() {
+  const [state, setState] = useState<{ open: boolean | null; until: string | null }>({ open: null, until: null })
   useEffect(() => {
-    const update = () => {
-      const s = openState()
-      setLabel(s.open ? { text: `Aperti ora, fino alle ${s.until}`, open: true } : { text: "Chiusi ora, apriamo alle 14:30", open: false })
-    }
+    const update = () => setState(openState())
     update()
     const id = setInterval(update, 60_000)
     return () => clearInterval(id)
   }, [])
-  return label
+  return state
 }
 
 /* ------------------------------------------------------------------ HERO */
@@ -50,7 +47,7 @@ export function Hero() {
   const imgY = useTransform(scrollYProgress, [0, 1], ["0%", "22%"])
   const textY = useTransform(scrollYProgress, [0, 1], ["0%", "-35%"])
   const fade = useTransform(scrollYProgress, [0, 0.6], [1, 0])
-  const status = useOpenLabel()
+  const status = useOpenState()
 
   return (
     <section ref={ref} className="relative isolate flex min-h-[100svh] flex-col justify-end overflow-hidden">
@@ -79,36 +76,30 @@ export function Hero() {
           transition={{ duration: 1.1, delay: 0.9, ease }}
         />
         <motion.div
-          className="mt-6 flex flex-wrap items-center gap-x-5 gap-y-3"
+          className="mt-5 flex items-end justify-between gap-4"
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 1.2 }}
         >
-          <StatusTag status={status} />
-          <span className="text-[16px] text-osso/80">Via Bruno Buozzi 12, Bolzano</span>
+          <p className="display text-[30px] leading-none sm:text-[40px]" aria-live="polite">
+            {status.open ? (
+              <>
+                <span className="text-arancio">Aperti</span> fino alle {status.until}
+              </>
+            ) : (
+              <>
+                {status.open === null ? "Tutti i giorni" : "Oggi"} dalle <span className="text-arancio">14:30</span>
+              </>
+            )}
+          </p>
+          <p className="text-right text-[14px] leading-snug text-osso/70">
+            Via Buozzi 12
+            <br />
+            Bolzano
+          </p>
         </motion.div>
       </motion.div>
     </section>
-  )
-}
-
-/** Open/closed pill: green pulse when open, orange when closed. */
-function StatusTag({ status }: { status: { text: string; open: boolean | null } }) {
-  const tone = status.open === null ? "border-osso/30 text-osso" : status.open ? "border-[#5fd068]/50 text-[#8ee497]" : "border-arancio/60 text-arancio"
-  const dot = status.open ? "bg-[#5fd068]" : "bg-arancio"
-  return (
-    <span
-      aria-live="polite"
-      className={`inline-flex h-11 items-center gap-2.5 rounded-full border bg-nero/60 px-5 text-[14px] font-semibold tracking-[0.1em] uppercase backdrop-blur-md ${tone}`}
-    >
-      {status.open !== null && (
-        <span className="relative flex h-2.5 w-2.5">
-          <span className={`absolute inset-0 animate-ping rounded-full opacity-70 ${dot}`} />
-          <span className={`relative h-2.5 w-2.5 rounded-full ${dot}`} />
-        </span>
-      )}
-      {status.text.replace(" ora,", " ·")}
-    </span>
   )
 }
 
@@ -248,17 +239,27 @@ export function RiseText({ lines, className = "" }: { lines: string[]; className
   )
 }
 
-/* ------------------------------------------------------- TONIGHT */
+/* ------------------------------------------------------- HOURS */
 
-/** Big answer to the only question that matters at 22:00: are they open? */
-export function Tonight() {
-  const status = useOpenLabel("Aperti tutti i giorni")
-  const [headline, sub] =
-    status.open === null ? ["Tutti i giorni", "dalle 14:30"] : status.open ? ["Aperti ora", status.text.split(", ")[1]] : ["Chiusi ora", "apriamo alle 14:30"]
+/** The week, Monday first. Today's row lights up orange once the browser knows the day. */
+export function Schedule() {
+  const [today, setToday] = useState<number | null>(null)
+  useEffect(() => setToday(romeNow().day), [])
+  const days = [...week.slice(1), week[0]]
   return (
-    <div aria-live="polite">
-      <p className={`display text-[clamp(72px,22vw,160px)] ${status.open ? "text-arancio" : "text-osso"}`}>{headline}</p>
-      <p className="display mt-1 text-[clamp(36px,10vw,72px)] text-osso/70">{sub}</p>
-    </div>
+    <ul className="border-t border-linea">
+      {days.map((d) => {
+        const isToday = week.indexOf(d) === today
+        return (
+          <li key={d.day} className={`flex h-14 items-center justify-between border-b border-linea ${isToday ? "text-arancio" : ""}`}>
+            <span className="display text-[28px]">
+              {d.day}
+              {isToday && <span className="ml-3 align-middle text-[14px] tracking-[0.12em]">Oggi</span>}
+            </span>
+            <span className={`display text-[28px] tabular-nums ${isToday ? "" : "text-osso/70"}`}>14:30 – {d.close}</span>
+          </li>
+        )
+      })}
+    </ul>
   )
 }
