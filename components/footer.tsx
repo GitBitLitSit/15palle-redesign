@@ -11,25 +11,27 @@ const link = "transition-colors hover:text-arancio"
 export function Footer() {
   return (
     <footer className="overflow-hidden border-t border-linea bg-cuoio pb-24 lg:pb-0">
-      <div className="mx-auto grid max-w-[1200px] gap-10 px-5 py-12 lg:grid-cols-[1.3fr_2fr] lg:gap-20 lg:px-10 lg:py-20">
+      <div className="mx-auto grid max-w-[1200px] gap-10 px-5 py-12 lg:gap-14 lg:px-10 lg:py-20">
         <div>
-          <Link href="/" className="flex items-center gap-3" aria-label="15 Palle, home">
-            <Image src={asset("/foto/logo.webp")} alt="" width={44} height={44} className="h-11 w-11 rounded-full" />
-            <span className="display text-[28px] leading-none">
-              15 <span className="text-arancio">Palle</span>
-            </span>
-          </Link>
+          <div className="flex items-center justify-between gap-4">
+            <Link href="/" className="flex items-center gap-3" aria-label="15 Palle, home">
+              <Image src={asset("/foto/logo.webp")} alt="" width={44} height={44} className="h-11 w-11 rounded-full" />
+              <span className="display text-[28px] leading-none">
+                15 <span className="text-arancio">Palle</span>
+              </span>
+            </Link>
+            <div className="flex gap-2">
+              <a href={club.instagram} target="_blank" rel="noreferrer" aria-label="Instagram" className={social}>
+                <InstagramLogo size={20} />
+              </a>
+              <a href={club.facebook} target="_blank" rel="noreferrer" aria-label="Facebook" className={social}>
+                <FacebookLogo size={20} weight="fill" />
+              </a>
+            </div>
+          </div>
           <p className="mt-4 max-w-[30ch] text-[15px] leading-relaxed text-cromo">
             Sala biliardo, bar e tornei nazionali nel cuore di Bolzano.
           </p>
-          <div className="mt-5 flex gap-2">
-            <a href={club.instagram} target="_blank" rel="noreferrer" aria-label="Instagram" className={social}>
-              <InstagramLogo size={20} />
-            </a>
-            <a href={club.facebook} target="_blank" rel="noreferrer" aria-label="Facebook" className={social}>
-              <FacebookLogo size={20} weight="fill" />
-            </a>
-          </div>
         </div>
 
         <div className="grid grid-cols-2 gap-x-6 gap-y-8 text-[15px] leading-relaxed sm:grid-cols-4">
