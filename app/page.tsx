@@ -19,9 +19,11 @@ export default function Home() {
 
         {/* PROSSIMO EVENTO */}
         <section id="eventi" className="scroll-mt-16 py-16 lg:py-24">
-          <SpeedBand items={["Finali italiane", "Italy Cup of Pool", "RAI Sport", "Italian Pool Tour", "FIBIS"]} />
-          <div className={`${wrap} mt-10 lg:mt-14`}>
+          <div className={wrap}>
             <NextEvent />
+          </div>
+          <div className="mt-14 lg:mt-20">
+            <SpeedBand items={["Finali italiane", "Italy Cup of Pool", "RAI Sport", "Italian Pool Tour", "FIBIS"]} />
           </div>
         </section>
 
