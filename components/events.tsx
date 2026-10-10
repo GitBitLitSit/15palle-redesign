@@ -1,8 +1,6 @@
 "use client"
 
-import Image from "next/image"
 import Link from "next/link"
-import { asset } from "@/lib/asset"
 import { useEffect, useState } from "react"
 import { motion } from "motion/react"
 import { ArrowRight, Phone } from "@phosphor-icons/react"
@@ -14,70 +12,106 @@ const ease = [0.16, 1, 0.3, 1] as const
 export function useEvents() {
   const [today, setToday] = useState(process.env.NEXT_PUBLIC_BUILD_DATE ?? "2026-01-01")
   useEffect(() => setToday(romeToday()), [])
-  return splitEvents(today)
+  return { ...splitEvents(today), today }
+}
+
+/** "Oggi", "Domani" or "Tra 15 giorni", from two ISO days. */
+function countdown(today: string, date: string) {
+  const days = Math.round((Date.parse(date) - Date.parse(today)) / 86_400_000)
+  if (days <= 0) return { lead: "Si gioca", n: "oggi", tail: "" }
+  if (days === 1) return { lead: "Si gioca", n: "domani", tail: "" }
+  return { lead: "Mancano", n: String(days), tail: " giorni" }
 }
 
 /* ------------------------------------------------------- HOME PROMO */
 
-/** The next event on the home page. Falls back to the latest past one if the calendar is empty. */
+/**
+ * The next event as a fight-night bill: a huge outlined date, the name cut across it,
+ * a ticket strip with day, time and game, and how many days are left.
+ * Falls back to the latest past event if the calendar is empty.
+ */
 export function NextEvent() {
-  const { upcoming, past } = useEvents()
+  const { upcoming, past, today } = useEvents()
   const e = upcoming[0] ?? past[0]
   if (!e) return null
   const d = eventDate(e)
-  const isNext = upcoming.length > 0
+  const isNext = upcoming.length > 0 && !!d.day
+  const big = d.day ? `${String(d.day).padStart(2, "0")}.${e.date.slice(5, 7)}` : `${d.month} ${String(d.year).slice(2)}`
+  const left = isNext ? countdown(today, e.date) : null
+  const strip = d.day ? [d.weekday, e.time ? `Ore ${e.time}` : null, e.tag] : [d.monthLong, String(d.year), e.tag]
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 24 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, amount: 0.4 }}
-      transition={{ duration: 0.8, ease }}
-    >
-      <Link
-        href="/eventi"
-        className="group relative grid grid-cols-[auto_1fr] overflow-hidden rounded-[20px] border border-linea bg-cuoio transition active:scale-[0.99] lg:min-h-[340px] lg:grid-cols-[200px_1fr_36%]"
-      >
-        <div className="flex w-[112px] flex-col items-center justify-center bg-arancio px-3 py-6 text-nero sm:w-[150px] lg:w-auto">
-          {d.day ? (
-            <>
-              <span className="display text-[72px] leading-[0.8] sm:text-[96px] lg:text-[140px]">{d.day}</span>
-              <span className="display mt-2 text-[24px] sm:text-[30px] lg:text-[40px]">{d.month}</span>
-            </>
-          ) : (
-            <>
-              <span className="display text-[34px]">{d.month}</span>
-              <span className="display text-[44px] leading-[0.9]">{d.year}</span>
-            </>
+    <div className="lg:grid lg:grid-cols-[1.1fr_1fr] lg:items-end lg:gap-16">
+      <div className="relative">
+        {/* The visibility check sits on the mask: the hidden numerals themselves never count as in view. */}
+        <motion.p
+          aria-hidden
+          className="display overflow-hidden pt-[0.08em] text-[clamp(130px,42vw,340px)] leading-[0.78]"
+          initial="hidden"
+          whileInView="shown"
+          viewport={{ once: true, amount: 0.3 }}
+        >
+          <motion.span
+            className="block text-transparent [-webkit-text-stroke:2px_var(--color-arancio)]"
+            variants={{ hidden: { y: "100%" }, shown: { y: 0 } }}
+            transition={{ duration: 1, ease }}
+          >
+            {big}
+          </motion.span>
+        </motion.p>
+        <motion.h2
+          className="display relative -mt-[0.55em] text-[clamp(52px,15vw,96px)] leading-[0.88] lg:hidden"
+          initial={{ opacity: 0, x: -24 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          viewport={{ once: true, amount: 0.4 }}
+          transition={{ duration: 0.9, delay: 0.25, ease }}
+        >
+          {e.title}
+        </motion.h2>
+      </div>
+
+      <div>
+        <h2 className="display hidden text-[88px] leading-[0.88] lg:block">{e.title}</h2>
+
+        <ul className="mt-8 grid grid-cols-3 border-y border-linea lg:mt-10">
+          {strip.map((t, i) => (
+            <li
+              key={i}
+              className={`display flex h-16 items-center justify-center text-[22px] sm:text-[26px] ${i > 0 ? "border-l border-linea" : ""} ${
+                i === 2 ? "text-arancio" : ""
+              }`}
+            >
+              {t}
+            </li>
+          ))}
+        </ul>
+
+        {left ? (
+          <p className="display mt-6 text-[34px] leading-none text-osso/60 sm:text-[44px]" suppressHydrationWarning>
+            {left.lead} <span className="text-osso">{left.n}</span>
+            {left.tail}
+          </p>
+        ) : (
+          <p className="mt-6 text-[16px] leading-relaxed text-cromo">{e.detail}</p>
+        )}
+
+        <div className="mt-8 flex items-center gap-5 whitespace-nowrap">
+          {isNext && (
+            <a
+              href={`tel:${club.phoneTel}`}
+              className="inline-flex h-14 items-center gap-3 bg-arancio px-7 text-[16px] font-semibold tracking-[0.08em] text-nero uppercase transition active:scale-[0.97]"
+            >
+              <Phone size={20} />
+              Iscriviti
+            </a>
           )}
-        </div>
-        <div className="flex flex-col justify-center gap-2 p-5 sm:p-8 lg:gap-3 lg:p-12">
-          <span className="text-[13px] font-semibold tracking-[0.12em] text-arancio uppercase">
-            {isNext ? "Prossimo evento" : "Ultimo evento"}
-            <span className="hidden lg:inline"> · {e.tag}</span>
-          </span>
-          <span className="display text-[34px] leading-[0.95] sm:text-[52px] lg:text-[64px]">{e.title}</span>
-          <span className="text-[15px] text-cromo lg:text-[17px]">
-            {d.day ? `${d.weekday} ${d.day} ${d.monthLong}${e.time ? `, ore ${e.time}` : ""}` : `${d.monthLong} ${d.year}`}
-          </span>
-          <span className="hidden max-w-[42ch] text-[16px] leading-relaxed text-cromo lg:block">{e.detail}</span>
-          <span className="mt-2 inline-flex items-center gap-2 text-[14px] font-semibold tracking-[0.08em] uppercase lg:mt-4 lg:h-12 lg:w-fit lg:bg-arancio lg:px-6 lg:text-nero">
+          <Link href="/eventi" className="group inline-flex items-center gap-2 text-[15px] font-semibold tracking-[0.08em] uppercase">
             Tutti gli eventi
-            <ArrowRight size={16} className="text-arancio transition-transform group-hover:translate-x-1 lg:text-nero" />
-          </span>
+            <ArrowRight size={18} className="text-arancio transition-transform group-hover:translate-x-1" />
+          </Link>
         </div>
-        <div className="relative hidden overflow-hidden lg:block">
-          <Image
-            src={asset("/foto/hero-focus.webp")}
-            alt=""
-            fill
-            sizes="500px"
-            className="object-cover transition-transform duration-700 group-hover:scale-105"
-          />
-          <div className="absolute inset-0 bg-gradient-to-r from-cuoio via-cuoio/10 to-transparent" />
-        </div>
-      </Link>
-    </motion.div>
+      </div>
+    </div>
   )
 }
 
