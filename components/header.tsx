@@ -7,11 +7,11 @@ import { AnimatePresence, motion, useMotionValueEvent, useScroll } from "motion/
 import { asset } from "@/lib/asset"
 
 const links = [
-  { href: "#sala", label: "La sala" },
-  { href: "#campione", label: "Il campione" },
-  { href: "#gare", label: "Le gare" },
-  { href: "#bar", label: "Il bar" },
-  { href: "#orari", label: "Orari" },
+  { href: asset("/eventi/"), label: "Eventi" },
+  { href: asset("/#sala"), label: "La sala" },
+  { href: asset("/#campione"), label: "Il campione" },
+  { href: asset("/#bar"), label: "Il bar" },
+  { href: asset("/#orari"), label: "Orari" },
 ]
 
 /** Transparent over the hero, solid once you scroll. Menu is a full-screen sheet on phones. */

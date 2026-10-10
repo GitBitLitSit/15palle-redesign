@@ -22,16 +22,54 @@ export const TABLES = 34
 export const GOOGLE_RATING = "4,5"
 export const GOOGLE_REVIEWS = 259
 
-// National events hosted at Via Buozzi 12 (the 2011 finals were at the old hall, Via Giotto 21).
-export const events = [
-  { when: "Mag 2024", title: "Finali Campionati Italiani a squadre", detail: "Il primo tricolore pool della stagione 2023/24. 9 squadre." },
-  { when: "Gen 2024", title: "Italy Cup of Pool, 4ª edizione", detail: "Vincono Corrieri e Cordelli. Lo stesso weekend: 3ª prova NBC e 2ª prova IPT Serie A." },
-  { when: "Mag 2023", title: "Finali Campionati Italiani Pool 8/15", detail: "Serie A, A2, B e C. Quattro giorni di gara, finali riprese da RAI Sport." },
-  { when: "Mag 2023", title: "Italian Pool Tour, 6ª prova", detail: "Palla 9, ultima tappa del tour. 32 Nazionali più Serie A e B." },
-  { when: "Gen 2021", title: "Italian Pool Tour, 2ª prova", detail: "Palla 10. 101 atleti: 26 Nazionali, 38 Serie A, 37 Serie B." },
-  { when: "Gen 2019", title: "Campionato Italiano FIBIS, 2ª prova", detail: "Palla 8. 160 iscritti, 8 tavoli in diretta streaming." },
-  { when: "Giu 2011", title: "Finali nazionali di americana 8-15", detail: "128 giocatori da tutta Italia." },
+export type ClubEvent = {
+  /** "2026-10-25" for a set day, "2024-05" when only the month is known. */
+  date: string
+  time?: string
+  title: string
+  detail: string
+  tag: string
+}
+
+// Upcoming: PLACEHOLDERS for the demo. Replace with the real calendar from the club.
+// Past: national events hosted at Via Buozzi 12 (the 2011 finals were at the old hall, Via Giotto 21).
+export const events: ClubEvent[] = [
+  { date: "2026-10-25", time: "15:00", tag: "Palla 9", title: "Torneo sociale d'autunno", detail: "Aperto a tutti i soci. Iscrizioni al bancone entro venerdì." },
+  { date: "2026-11-15", time: "14:30", tag: "Palla 8", title: "Domenica a coppie", detail: "Coppie sorteggiate, un esperto e un principiante. Si gioca fino alla finale." },
+  { date: "2026-12-13", time: "16:00", tag: "Palla 8", title: "Torneo di Natale", detail: "Gara, cena e premiazione. Posti limitati." },
+  { date: "2024-05", tag: "FIBIS", title: "Finali Campionati Italiani a squadre", detail: "Il primo tricolore pool della stagione 2023/24. 9 squadre." },
+  { date: "2024-01", tag: "FIBIS", title: "Italy Cup of Pool, 4ª edizione", detail: "Vincono Corrieri e Cordelli. Lo stesso weekend: 3ª prova NBC e 2ª prova IPT Serie A." },
+  { date: "2023-05", tag: "RAI Sport", title: "Finali Campionati Italiani Pool 8/15", detail: "Serie A, A2, B e C. Quattro giorni di gara, finali riprese da RAI Sport." },
+  { date: "2023-05", tag: "Palla 9", title: "Italian Pool Tour, 6ª prova", detail: "Ultima tappa del tour. 32 Nazionali più Serie A e B." },
+  { date: "2021-01", tag: "Palla 10", title: "Italian Pool Tour, 2ª prova", detail: "101 atleti: 26 Nazionali, 38 Serie A, 37 Serie B." },
+  { date: "2019-01", tag: "Palla 8", title: "Campionato Italiano FIBIS, 2ª prova", detail: "160 iscritti, 8 tavoli in diretta streaming." },
+  { date: "2011-06", tag: "Americana", title: "Finali nazionali di americana 8-15", detail: "128 giocatori da tutta Italia." },
 ]
+
+const MONTHS = ["Gen", "Feb", "Mar", "Apr", "Mag", "Giu", "Lug", "Ago", "Set", "Ott", "Nov", "Dic"]
+const MONTHS_LONG = ["Gennaio", "Febbraio", "Marzo", "Aprile", "Maggio", "Giugno", "Luglio", "Agosto", "Settembre", "Ottobre", "Novembre", "Dicembre"]
+const WEEKDAYS = ["Domenica", "Lunedì", "Martedì", "Mercoledì", "Giovedì", "Venerdì", "Sabato"]
+
+/** Pieces for the big date blocks: day (if known), short and long month, weekday, year. */
+export function eventDate(e: ClubEvent) {
+  const [y, m, d] = e.date.split("-").map(Number)
+  const weekday = d ? WEEKDAYS[new Date(Date.UTC(y, m - 1, d)).getUTCDay()] : undefined
+  return { year: y, month: MONTHS[m - 1], monthLong: MONTHS_LONG[m - 1], day: d as number | undefined, weekday }
+}
+
+/** Upcoming (soonest first) and past (newest first), relative to an ISO day like "2026-10-10". */
+export function splitEvents(today: string) {
+  const sorted = [...events].sort((a, b) => a.date.localeCompare(b.date))
+  return {
+    upcoming: sorted.filter((e) => e.date >= today),
+    past: sorted.filter((e) => e.date < today).reverse(),
+  }
+}
+
+/** Today's date in Bolzano as "YYYY-MM-DD". */
+export function romeToday() {
+  return new Intl.DateTimeFormat("en-CA", { timeZone: "Europe/Rome" }).format(new Date())
+}
 
 export const OPEN_AT = 14 * 60 + 30
 

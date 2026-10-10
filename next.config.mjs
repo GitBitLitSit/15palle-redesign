@@ -9,7 +9,8 @@ const nextConfig = {
   output: "export",
   basePath,
   trailingSlash: true,
-  env: { NEXT_PUBLIC_BASE_PATH: basePath },
+  // The build date lets the static page split upcoming/past events before the browser corrects it.
+  env: { NEXT_PUBLIC_BASE_PATH: basePath, NEXT_PUBLIC_BUILD_DATE: new Date().toISOString().slice(0, 10) },
   outputFileTracingRoot: dirname(fileURLToPath(import.meta.url)),
   // GitHub Pages is static hosting, so there is no image optimizer; the photos are already small webp files.
   images: { unoptimized: true },

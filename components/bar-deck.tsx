@@ -6,7 +6,9 @@ import { AnimatePresence, motion, type PanInfo } from "motion/react"
 import { ArrowLeft, ArrowRight, ArrowsOut, X } from "@phosphor-icons/react"
 import { asset } from "@/lib/asset"
 
-const photos = [
+export type Photo = { src: string; alt: string }
+
+const photos: Photo[] = [
   { src: asset("/foto/aura2-expanded.webp"), alt: "I divani bianchi della lounge sotto il soffitto di glicine" },
   { src: asset("/foto/newbar2.webp"), alt: "Le spine di birra sul bancone, tra fiori e bottiglie" },
   { src: asset("/foto/bancone.jpg"), alt: "Il bancone del bar con i fiori appesi al soffitto" },
@@ -120,21 +122,21 @@ export function BarDeck() {
       </div>
 
       <AnimatePresence>
-        {viewer !== null && <Viewer start={viewer} onClose={(last) => { setViewer(null); setOrder(photos.map((_, i) => (last + i) % photos.length)) }} />}
+        {viewer !== null && <Viewer photos={photos} start={viewer} onClose={(last) => { setViewer(null); setOrder(photos.map((_, i) => (last + i) % photos.length)) }} />}
       </AnimatePresence>
     </div>
   )
 }
 
 /** Full-screen photo viewer: swipe sideways to browse, swipe down or press Esc to close. */
-function Viewer({ start, onClose }: { start: number; onClose: (last: number) => void }) {
+export function Viewer({ photos, start, onClose, label = "Foto del bar" }: { photos: Photo[]; start: number; onClose: (last: number) => void; label?: string }) {
   const [index, setIndex] = useState(start)
   const [dir, setDir] = useState(0)
   const closeRef = useRef<HTMLButtonElement>(null)
   const go = useCallback((d: number) => {
     setDir(d)
     setIndex((i) => (i + d + photos.length) % photos.length)
-  }, [])
+  }, [photos.length])
   const close = useCallback(() => onClose(index), [onClose, index])
 
   useEffect(() => {
@@ -169,7 +171,7 @@ function Viewer({ start, onClose }: { start: number; onClose: (last: number) => 
     <motion.div
       role="dialog"
       aria-modal="true"
-      aria-label="Foto del bar"
+      aria-label={label}
       className="fixed inset-0 z-[80] flex flex-col bg-nero pt-[env(safe-area-inset-top)] pb-[env(safe-area-inset-bottom)]"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}

@@ -4,7 +4,10 @@ import { BottomBar } from "@/components/bottom-bar"
 import { Footer } from "@/components/footer"
 import { HallReveal, Hero, ParallaxPhoto, Patch, RiseText, SpeedBand, Tonight } from "@/components/scenes"
 import { BarDeck } from "@/components/bar-deck"
-import { club, events, TABLES } from "@/lib/club"
+import { NextEvent } from "@/components/events"
+import { Gallery } from "@/components/gallery"
+import Link from "next/link"
+import { club, TABLES } from "@/lib/club"
 
 const wrap = "mx-auto w-full max-w-[1200px] px-5 lg:px-10"
 
@@ -14,6 +17,11 @@ export default function Home() {
       <Header />
       <main className="overflow-x-clip">
         <Hero />
+
+        {/* PROSSIMO EVENTO */}
+        <section className={`${wrap} py-16 lg:py-24`}>
+          <NextEvent />
+        </section>
 
         {/* LA SALA */}
         <section id="sala" className="scroll-mt-16">
@@ -66,23 +74,13 @@ export default function Home() {
             <p className="display text-[34px] leading-[1] text-osso/80 sm:text-[44px]">
               Finali italiane nel 2023 e 2024, <span className="text-arancio">in diretta su RAI Sport.</span>
             </p>
-            <details className="group border-t border-linea">
-              <summary className="flex h-16 cursor-pointer list-none items-center justify-between text-[17px] font-semibold uppercase tracking-[0.08em] [&::-webkit-details-marker]:hidden">
-                Tutte le {events.length} gare ospitate
-                <span className="text-[28px] font-normal text-arancio transition-transform duration-300 group-open:rotate-45">+</span>
-              </summary>
-              <ul className="pb-4">
-                {events.map((e) => (
-                  <li key={e.when + e.title} className="grid grid-cols-[88px_1fr] gap-4 border-t border-linea py-4">
-                    <span className="display text-[24px] text-arancio">{e.when}</span>
-                    <span>
-                      <span className="block font-semibold">{e.title}</span>
-                      <span className="mt-0.5 block text-[16px] leading-snug text-cromo">{e.detail}</span>
-                    </span>
-                  </li>
-                ))}
-              </ul>
-            </details>
+            <Link
+              href="/eventi"
+              className="group flex h-16 items-center justify-between border-y border-linea text-[17px] font-semibold tracking-[0.08em] uppercase"
+            >
+              Eventi in arrivo e archivio
+              <ArrowUpRight size={22} className="text-arancio transition-transform group-hover:translate-x-1 group-hover:-translate-y-1" />
+            </Link>
           </div>
         </section>
 
@@ -99,14 +97,16 @@ export default function Home() {
           <BarDeck />
         </section>
 
+        {/* GALLERIA */}
+        <section className="pb-28 lg:pb-40">
+          <h2 className={`${wrap} display mb-10 text-[60px] sm:text-[84px] lg:text-[100px]`}>
+            <RiseText lines={["Dentro", "il 15 Palle."]} />
+          </h2>
+          <Gallery />
+        </section>
+
         {/* CORSI: the one orange block */}
         <section className="bg-arancio text-nero">
-          <ParallaxPhoto
-            src="/foto/mano.webp"
-            alt="Una mano prepara il triangolo delle palle sul panno blu"
-            className="h-[44svh] max-h-[520px] min-h-[280px]"
-            position="45% 60%"
-          />
           <div className={`${wrap} py-20 lg:flex lg:items-end lg:justify-between lg:py-28`}>
             <div>
               <h2 className="display text-[64px] sm:text-[90px] lg:text-[110px]">
