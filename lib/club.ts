@@ -11,6 +11,9 @@ export const club = {
   phoneTel: "+393928100919",
   email: "sala15palle@yahoo.it",
   facebook: "https://www.facebook.com/15pallebolzano.it",
+  // PLACEHOLDERS: no Instagram account or tax code found online. Confirm with the club before going live.
+  instagram: "https://www.instagram.com/15pallebolzano/",
+  taxCode: "C.F. 00000000000",
   mapsHref: "https://maps.app.goo.gl/m9vFp5QStRofnNaJ9",
   mapsEmbed:
     "https://maps.google.com/maps?q=" +

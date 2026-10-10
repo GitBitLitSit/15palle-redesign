@@ -2,11 +2,10 @@ import { ArrowUpRight, Phone } from "@phosphor-icons/react/dist/ssr"
 import { Header } from "@/components/header"
 import { BottomBar } from "@/components/bottom-bar"
 import { Footer } from "@/components/footer"
-import { HallReveal, Hero, ParallaxPhoto, Patch, RiseText, Schedule, SpeedBand } from "@/components/scenes"
+import { HallReveal, Hero, Patch, RiseText, Schedule, SpeedBand } from "@/components/scenes"
 import { BarDeck } from "@/components/bar-deck"
 import { NextEvent } from "@/components/events"
 import { Gallery } from "@/components/gallery"
-import Link from "next/link"
 import { club, TABLES } from "@/lib/club"
 
 const wrap = "mx-auto w-full max-w-[1200px] px-5 lg:px-10"
@@ -19,8 +18,11 @@ export default function Home() {
         <Hero />
 
         {/* PROSSIMO EVENTO */}
-        <section className={`${wrap} py-16 lg:py-24`}>
-          <NextEvent />
+        <section id="eventi" className="scroll-mt-16 py-16 lg:py-24">
+          <SpeedBand items={["Finali italiane", "Italy Cup of Pool", "RAI Sport", "Italian Pool Tour", "FIBIS"]} />
+          <div className={`${wrap} mt-10 lg:mt-14`}>
+            <NextEvent />
+          </div>
         </section>
 
         {/* LA SALA */}
@@ -51,36 +53,6 @@ export default function Home() {
           </div>
           <div className="flex justify-center">
             <Patch text="8 volte campione italiano · campione europeo 2011 · " size={300} />
-          </div>
-        </section>
-
-        {/* LE GARE */}
-        <section id="gare" className="scroll-mt-16 border-y border-linea bg-cuoio py-24 lg:py-32">
-          <div className={wrap}>
-            <h2 className="display text-[60px] sm:text-[84px] lg:text-[110px]">
-              <RiseText lines={["Qui si gioca", "il campionato."]} />
-            </h2>
-          </div>
-          <ParallaxPhoto
-            src="/foto/hero-focus.webp"
-            alt="Un tavolo da gara con il cartello FIBIS, pronto per la finale"
-            className="mx-5 mt-12 h-[62svh] max-h-[640px] min-h-[380px] rounded-[20px] lg:mx-10"
-            position="50% 55%"
-          />
-          <div className="mt-12">
-            <SpeedBand items={["Finali italiane", "Italy Cup of Pool", "RAI Sport", "Italian Pool Tour", "FIBIS"]} />
-          </div>
-          <div className={`${wrap} mt-12 grid gap-10 lg:grid-cols-2`}>
-            <p className="display text-[34px] leading-[1] text-osso/80 sm:text-[44px]">
-              Finali italiane nel 2023 e 2024, <span className="text-arancio">in diretta su RAI Sport.</span>
-            </p>
-            <Link
-              href="/eventi"
-              className="group flex h-16 items-center justify-between border-y border-linea text-[17px] font-semibold tracking-[0.08em] uppercase"
-            >
-              Eventi in arrivo e archivio
-              <ArrowUpRight size={22} className="text-arancio transition-transform group-hover:translate-x-1 group-hover:-translate-y-1" />
-            </Link>
           </div>
         </section>
 

@@ -41,13 +41,13 @@ export function Gallery() {
       <ul
         ref={track}
         onScroll={onScroll}
-        className="flex snap-x snap-mandatory gap-4 overflow-x-auto overscroll-x-contain px-5 [scrollbar-width:none] lg:px-[max(40px,calc((100vw-1200px)/2+40px))] [&::-webkit-scrollbar]:hidden"
+        className="flex snap-x snap-mandatory scroll-px-5 gap-4 overflow-x-auto overscroll-x-contain px-5 [scrollbar-width:none] lg:scroll-px-[max(40px,calc((100vw-1200px)/2+40px))] lg:px-[max(40px,calc((100vw-1200px)/2+40px))] [&::-webkit-scrollbar]:hidden"
         aria-label="Galleria foto"
       >
         {slides.map((s, i) => (
           <li
             key={s.src}
-            className={`relative aspect-[4/5] w-[82vw] max-w-[760px] shrink-0 snap-start overflow-hidden rounded-[20px] transition-[opacity,transform] duration-500 sm:aspect-[3/2] ${
+            className={`relative aspect-[4/5] w-[82vw] max-w-[760px] shrink-0 snap-start overflow-hidden last:snap-end rounded-[20px] transition-[opacity,transform] duration-500 sm:aspect-[3/2] ${
               i === active ? "opacity-100" : "scale-[0.96] opacity-45"
             }`}
           >
@@ -66,7 +66,6 @@ export function Gallery() {
             </button>
           </li>
         ))}
-        <li aria-hidden className="w-px shrink-0" />
       </ul>
 
       <div className="mx-auto mt-6 flex max-w-[1200px] items-center gap-5 px-5 lg:px-10">

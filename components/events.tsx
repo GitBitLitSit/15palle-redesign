@@ -1,6 +1,8 @@
 "use client"
 
+import Image from "next/image"
 import Link from "next/link"
+import { asset } from "@/lib/asset"
 import { useEffect, useState } from "react"
 import { motion } from "motion/react"
 import { ArrowRight, Phone } from "@phosphor-icons/react"
@@ -34,13 +36,13 @@ export function NextEvent() {
     >
       <Link
         href="/eventi"
-        className="group relative grid grid-cols-[auto_1fr] overflow-hidden rounded-[20px] border border-linea bg-cuoio transition active:scale-[0.99]"
+        className="group relative grid grid-cols-[auto_1fr] overflow-hidden rounded-[20px] border border-linea bg-cuoio transition active:scale-[0.99] lg:min-h-[340px] lg:grid-cols-[200px_1fr_36%]"
       >
-        <div className="flex w-[112px] flex-col items-center justify-center bg-arancio px-3 py-6 text-nero sm:w-[150px]">
+        <div className="flex w-[112px] flex-col items-center justify-center bg-arancio px-3 py-6 text-nero sm:w-[150px] lg:w-auto">
           {d.day ? (
             <>
-              <span className="display text-[72px] leading-[0.8] sm:text-[96px]">{d.day}</span>
-              <span className="display mt-2 text-[24px] sm:text-[30px]">{d.month}</span>
+              <span className="display text-[72px] leading-[0.8] sm:text-[96px] lg:text-[140px]">{d.day}</span>
+              <span className="display mt-2 text-[24px] sm:text-[30px] lg:text-[40px]">{d.month}</span>
             </>
           ) : (
             <>
@@ -49,18 +51,30 @@ export function NextEvent() {
             </>
           )}
         </div>
-        <div className="flex flex-col justify-center gap-2 p-5 sm:p-8">
+        <div className="flex flex-col justify-center gap-2 p-5 sm:p-8 lg:gap-3 lg:p-12">
           <span className="text-[13px] font-semibold tracking-[0.12em] text-arancio uppercase">
             {isNext ? "Prossimo evento" : "Ultimo evento"}
+            <span className="hidden lg:inline"> · {e.tag}</span>
           </span>
-          <span className="display text-[34px] leading-[0.95] sm:text-[52px]">{e.title}</span>
-          <span className="text-[15px] text-cromo">
+          <span className="display text-[34px] leading-[0.95] sm:text-[52px] lg:text-[64px]">{e.title}</span>
+          <span className="text-[15px] text-cromo lg:text-[17px]">
             {d.day ? `${d.weekday} ${d.day} ${d.monthLong}${e.time ? `, ore ${e.time}` : ""}` : `${d.monthLong} ${d.year}`}
           </span>
-          <span className="mt-2 inline-flex items-center gap-2 text-[14px] font-semibold tracking-[0.08em] uppercase">
+          <span className="hidden max-w-[42ch] text-[16px] leading-relaxed text-cromo lg:block">{e.detail}</span>
+          <span className="mt-2 inline-flex items-center gap-2 text-[14px] font-semibold tracking-[0.08em] uppercase lg:mt-4 lg:h-12 lg:w-fit lg:bg-arancio lg:px-6 lg:text-nero">
             Tutti gli eventi
-            <ArrowRight size={16} className="text-arancio transition-transform group-hover:translate-x-1" />
+            <ArrowRight size={16} className="text-arancio transition-transform group-hover:translate-x-1 lg:text-nero" />
           </span>
+        </div>
+        <div className="relative hidden overflow-hidden lg:block">
+          <Image
+            src={asset("/foto/hero-focus.webp")}
+            alt=""
+            fill
+            sizes="500px"
+            className="object-cover transition-transform duration-700 group-hover:scale-105"
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-cuoio via-cuoio/10 to-transparent" />
         </div>
       </Link>
     </motion.div>
