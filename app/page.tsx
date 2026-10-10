@@ -2,7 +2,7 @@ import { ArrowUpRight, Phone } from "@phosphor-icons/react/dist/ssr"
 import { Header } from "@/components/header"
 import { BottomBar } from "@/components/bottom-bar"
 import { Footer } from "@/components/footer"
-import { HallReveal, Hero, Patch, RiseText, ScrollWords, SpeedBand, Tonight } from "@/components/scenes"
+import { HallReveal, Hero, ParallaxPhoto, Patch, RiseText, SpeedBand, Tonight } from "@/components/scenes"
 import { BarDeck } from "@/components/bar-deck"
 import { club, events, TABLES } from "@/lib/club"
 
@@ -14,14 +14,6 @@ export default function Home() {
       <Header />
       <main className="overflow-x-clip">
         <Hero />
-
-        {/* MANIFESTO: lights up as you read */}
-        <section className={`${wrap} py-28 lg:py-40`}>
-          <ScrollWords
-            text="Trentaquattro tavoli. Un bancone lungo. Divani sotto il glicine. E gente che arriva in moto e resta fino all'una."
-            accent={["moto"]}
-          />
-        </section>
 
         {/* LA SALA */}
         <section id="sala" className="scroll-mt-16">
@@ -35,10 +27,19 @@ export default function Home() {
               <RiseText lines={["Arriva", "in Harley."]} />
               <RiseText lines={["Gioca da", "campione."]} className="text-arancio" />
             </h2>
-            <p className="mt-8 max-w-[38ch] text-[18px] leading-relaxed text-cromo">
-              Stefano Bazzana, titolare del 15 Palle. Otto titoli italiani e un europeo di pool continuo, vinto nel 2011 con una
-              finale chiusa 100 a 47. Nel 2023 si è preso anche la Italy Cup of Pool, in coppia con Andrea Grosso.
-            </p>
+            <dl className="mt-10 grid grid-cols-3 gap-4 border-t border-linea pt-6">
+              {[
+                ["8×", "Campione italiano"],
+                ["2011", "Campione europeo"],
+                ["2023", "Italy Cup of Pool"],
+              ].map(([n, l]) => (
+                <div key={l}>
+                  <dt className="display text-[44px] text-arancio sm:text-[56px]">{n}</dt>
+                  <dd className="mt-1 text-[14px] leading-snug text-cromo">{l}</dd>
+                </div>
+              ))}
+            </dl>
+            <p className="mt-6 text-[16px] text-cromo">Stefano Bazzana, il titolare.</p>
           </div>
           <div className="flex justify-center">
             <Patch text="8 volte campione italiano · campione europeo 2011 · " size={300} />
@@ -52,13 +53,18 @@ export default function Home() {
               <RiseText lines={["Qui si gioca", "il campionato."]} />
             </h2>
           </div>
+          <ParallaxPhoto
+            src="/foto/hero-focus.webp"
+            alt="Un tavolo da gara con il cartello FIBIS, pronto per la finale"
+            className="mx-5 mt-12 h-[62svh] max-h-[640px] min-h-[380px] rounded-[20px] lg:mx-10"
+            position="50% 55%"
+          />
           <div className="mt-12">
             <SpeedBand items={["Finali italiane", "Italy Cup of Pool", "RAI Sport", "Italian Pool Tour", "FIBIS"]} />
           </div>
           <div className={`${wrap} mt-12 grid gap-10 lg:grid-cols-2`}>
-            <p className="max-w-[40ch] text-[18px] leading-relaxed text-cromo">
-              Dal 2011 il 15 Palle ospita gare nazionali della Federazione Italiana Biliardo Sportivo. Nel 2023 e nel 2024 si sono
-              giocate qui le finali dei campionati italiani, con le telecamere di RAI Sport.
+            <p className="display text-[34px] leading-[1] text-osso/80 sm:text-[44px]">
+              Finali italiane nel 2023 e 2024, <span className="text-arancio">in diretta su RAI Sport.</span>
             </p>
             <details className="group border-t border-linea">
               <summary className="flex h-16 cursor-pointer list-none items-center justify-between text-[17px] font-semibold uppercase tracking-[0.08em] [&::-webkit-details-marker]:hidden">
@@ -87,8 +93,7 @@ export default function Home() {
               <RiseText lines={["Tra una partita", "e l'altra."]} />
             </h2>
             <p className="mt-8 max-w-[36ch] text-[18px] leading-relaxed text-cromo">
-              Birra alla spina, vini, distillati e qualcosa da sgranocchiare. Divani bianchi sotto il soffitto di glicine, per chi
-              gioca e per chi guarda.
+              Birra alla spina, vini e distillati. Divani sotto il glicine.
             </p>
           </div>
           <BarDeck />
@@ -96,13 +101,19 @@ export default function Home() {
 
         {/* CORSI: the one orange block */}
         <section className="bg-arancio text-nero">
+          <ParallaxPhoto
+            src="/foto/mano.webp"
+            alt="Una mano prepara il triangolo delle palle sul panno blu"
+            className="h-[44svh] max-h-[520px] min-h-[280px]"
+            position="45% 60%"
+          />
           <div className={`${wrap} py-20 lg:flex lg:items-end lg:justify-between lg:py-28`}>
             <div>
               <h2 className="display text-[64px] sm:text-[90px] lg:text-[110px]">
                 <RiseText lines={["Vuoi", "imparare?"]} />
               </h2>
               <p className="mt-6 max-w-[34ch] text-[18px] leading-relaxed font-medium">
-                Corsi per bambini, ragazzi e adulti, con istruttori qualificati. Alcuni nostri allievi sono arrivati in Serie B.
+                Corsi per bambini, ragazzi e adulti. Qualcuno è arrivato in Serie B.
               </p>
             </div>
             <a

@@ -2,7 +2,7 @@
 
 import Image from "next/image"
 import { useEffect, useRef, useState } from "react"
-import { animate, motion, useInView, useScroll, useTransform, type MotionValue } from "motion/react"
+import { animate, motion, useInView, useScroll, useTransform } from "motion/react"
 import { openState } from "@/lib/club"
 import { asset } from "@/lib/asset"
 
@@ -79,49 +79,52 @@ export function Hero() {
           transition={{ duration: 1.1, delay: 0.9, ease }}
         />
         <motion.div
-          className="mt-5 flex flex-col gap-1 text-[17px] sm:flex-row sm:gap-6"
+          className="mt-6 flex flex-wrap items-center gap-x-5 gap-y-3"
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 1.2 }}
         >
-          <span>Via Bruno Buozzi 12</span>
-          <span className="flex items-center gap-2 text-cromo" aria-live="polite">
-            {status.open !== null && <span className={`h-1.5 w-1.5 rounded-full ${status.open ? "bg-[#5fd068]" : "bg-cromo"}`} />}
-            {status.text}
-          </span>
+          <StatusTag status={status} />
+          <span className="text-[16px] text-osso/80">Via Bruno Buozzi 12, Bolzano</span>
         </motion.div>
       </motion.div>
     </section>
   )
 }
 
-/* ------------------------------------------------------- MANIFESTO */
-
-function Word({ word, progress, range }: { word: string; progress: MotionValue<number>; range: [number, number] }) {
-  const opacity = useTransform(progress, range, [0.16, 1])
+/** Open/closed pill: green pulse when open, orange when closed. */
+function StatusTag({ status }: { status: { text: string; open: boolean | null } }) {
+  const tone = status.open === null ? "border-osso/30 text-osso" : status.open ? "border-[#5fd068]/50 text-[#8ee497]" : "border-arancio/60 text-arancio"
+  const dot = status.open ? "bg-[#5fd068]" : "bg-arancio"
   return (
-    <motion.span style={{ opacity }} className="inline-block pr-[0.25em]">
-      {word}
-    </motion.span>
+    <span
+      aria-live="polite"
+      className={`inline-flex h-11 items-center gap-2.5 rounded-full border bg-nero/60 px-5 text-[14px] font-semibold tracking-[0.1em] uppercase backdrop-blur-md ${tone}`}
+    >
+      {status.open !== null && (
+        <span className="relative flex h-2.5 w-2.5">
+          <span className={`absolute inset-0 animate-ping rounded-full opacity-70 ${dot}`} />
+          <span className={`relative h-2.5 w-2.5 rounded-full ${dot}`} />
+        </span>
+      )}
+      {status.text.replace(" ora,", " ·")}
+    </span>
   )
 }
 
-/** A paragraph that lights up word by word as you read down. */
-export function ScrollWords({ text, accent = [] }: { text: string; accent?: string[] }) {
-  const ref = useRef<HTMLParagraphElement>(null)
-  const { scrollYProgress } = useScroll({ target: ref, offset: ["start 0.85", "end 0.4"] })
-  const words = text.split(" ")
+/* ------------------------------------------------------- PARALLAX PHOTO */
+
+/** A photo that slides slightly slower than the page, so it feels like a window. */
+export function ParallaxPhoto({ src, alt, className = "", position = "50% 50%" }: { src: string; alt: string; className?: string; position?: string }) {
+  const ref = useRef<HTMLDivElement>(null)
+  const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "end start"] })
+  const y = useTransform(scrollYProgress, [0, 1], ["-10%", "10%"])
   return (
-    <p ref={ref} className="display text-[46px] leading-[0.95] sm:text-[64px] lg:text-[88px]" aria-label={text}>
-      {words.map((w, i) => {
-        const start = i / words.length
-        return (
-          <span key={i} aria-hidden className={accent.includes(w.replace(/[.,]/g, "")) ? "text-arancio" : undefined}>
-            <Word word={w} progress={scrollYProgress} range={[start, start + 1 / words.length]} />
-          </span>
-        )
-      })}
-    </p>
+    <div ref={ref} className={`relative overflow-hidden ${className}`}>
+      <motion.div style={{ y }} className="absolute -inset-y-[12%] inset-x-0">
+        <Image src={asset(src)} alt={alt} fill sizes="100vw" className="object-cover" style={{ objectPosition: position }} />
+      </motion.div>
+    </div>
   )
 }
 
@@ -162,9 +165,6 @@ export function HallReveal({ tables }: { tables: number }) {
             <CountUp to={tables} />
           </p>
           <p className="kicker mt-2 text-osso">Tavoli da torneo</p>
-          <p className="mt-3 max-w-[30ch] text-[17px] leading-relaxed text-osso/85">
-            Gli stessi su cui si giocano le finali italiane. Uno accanto all&apos;altro, sotto le lampade.
-          </p>
         </div>
       </motion.div>
     </div>
