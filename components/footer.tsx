@@ -34,7 +34,7 @@ export function Footer() {
           </p>
         </div>
 
-        <div className="grid grid-cols-2 gap-x-6 gap-y-8 text-[15px] leading-relaxed sm:grid-cols-4">
+        <div className="grid grid-cols-2 gap-x-6 gap-y-8 text-[15px] leading-relaxed sm:grid-cols-3">
           <div>
             <p className={head}>Visita</p>
             <p>Via Bruno Buozzi 12</p>
@@ -42,13 +42,6 @@ export function Footer() {
             <a href={club.mapsHref} target="_blank" rel="noreferrer" className={`mt-1 inline-flex items-center gap-1 ${link}`}>
               Indicazioni <ArrowUpRight size={14} />
             </a>
-          </div>
-          <div>
-            <p className={head}>Orari</p>
-            <p>Lun - Sab</p>
-            <p className="text-cromo">14:30 - 1:00</p>
-            <p className="mt-1">Dom</p>
-            <p className="text-cromo">14:30 - 24:00</p>
           </div>
           <div className="min-w-0">
             <p className={head}>Contatti</p>
