@@ -1,0 +1,87 @@
+@import "tailwindcss";
+
+/*
+  Leather black, bone white, chrome grey and the orange from the 15 Palle logo.
+  One theme, designed for phones first.
+*/
+@theme {
+  --color-nero: #0b0a09;
+  --color-cuoio: #15120f;
+  --color-cuoio-2: #201b16;
+  --color-osso: #efe8dc;
+  --color-cromo: #a2a3a3;
+  --color-arancio: #ee7d2b;
+  --color-linea: rgb(239 232 220 / 0.12);
+
+  --font-display: var(--font-shoulders), "Arial Narrow", sans-serif;
+  --font-sans: var(--font-barlow), "Helvetica Neue", Arial, sans-serif;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  background: var(--color-nero);
+  color: var(--color-osso);
+  font-family: var(--font-sans);
+  font-size: 18px;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* A little grain so the black reads as material, not a screen. Fixed layer: no repaint on scroll. */
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 70;
+  pointer-events: none;
+  opacity: 0.06;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+@layer components {
+  .display {
+    font-family: var(--font-display);
+    font-weight: 800;
+    text-transform: uppercase;
+    line-height: 0.88;
+    letter-spacing: -0.01em;
+  }
+  .kicker {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 15px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+  }
+}
+
+::selection {
+  background: var(--color-arancio);
+  color: var(--color-nero);
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-arancio);
+  outline-offset: 3px;
+}
+
+@keyframes spin-slow {
+  to {
+    transform: rotate(360deg);
+  }
+}
+.spin-slow {
+  animation: spin-slow 28s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .spin-slow {
+    animation: none;
+  }
+}
